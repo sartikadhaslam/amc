@@ -182,13 +182,13 @@
                                 <a href="#senjata" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">Senjata <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg> </a>
                                 <ul class="collapse list-unstyled sub-submenu" id="senjata" data-bs-parent="#apps"> 
                                     <li>
-                                        <a href="./app-invoice-list.html"> List Senjata </a>
+                                        <a href="{{ route('weapons.index') }}"> List Senjata </a>
                                     </li>
                                     <li>
-                                        <a href="./app-invoice-preview.html"> Harga Beli </a>
+                                        <a href="{{ route('harga-beli.index') }}"> Harga Beli </a>
                                     </li>
                                     <li>
-                                        <a href="./app-invoice-add.html"> Harga Jual </a>
+                                        <a href="{{ route('harga-jual.index') }}"> Harga Jual </a>
                                     </li>
                                 </ul>
                             </li>
