@@ -20,7 +20,7 @@
                                     <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="#">Ref</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">badsides</li>
+                                            <li class="breadcrumb-item active" aria-current="page">Badsides</li>
                                         </ol>
                                     </nav>
                     

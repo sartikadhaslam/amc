@@ -20,7 +20,7 @@
                                     <nav class="breadcrumb-style-one" aria-label="breadcrumb">
                                         <ol class="breadcrumb">
                                             <li class="breadcrumb-item"><a href="#">Ref</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Weapons</li>
+                                            <li class="breadcrumb-item active" aria-current="page">Badsides</li>
                                         </ol>
                                     </nav>
                     
@@ -54,7 +54,7 @@
                             <div class="widget-header">
                                 <div class="row">
                                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                                        <h4>List Weapons</h4>
+                                        <h4>List Badside</h4>
                                     </div>
                                 </div>
                             </div>
@@ -67,9 +67,10 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col">No</th>
+                                                <th scope="col">Kode</th>
                                                 <th scope="col">Nama</th>
-                                                <th scope="col">Tipe</th>
-                                                <th class="text-center" scope="col">Crafting</th>
+                                                <th scope="col">Contact Person</th>
+                                                <th scope="col">Phone</th>
                                                 <th class="text-center" scope="col">Status</th>
                                                 <th class="text-center" scope="col"></th>
                                             </tr>
@@ -79,20 +80,19 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
+                                                    <p class="mb-0">{{ $item->kode }}</p>
+                                                </td>
+                                                <td>
                                                     <p class="mb-0">{{ $item->nama }}</p>
                                                 </td>
                                                 <td>
-                                                    <p class="mb-0">{{ $item->tipe }}</p>
+                                                    <p class="mb-0">{{ $item->cp }}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="mb-0">{{ $item->phone }}</p>
                                                 </td>
                                                 <td class="text-center">
-                                                    @if($item->is_crafting == 0)
-                                                    <span class="badge badge-light-danger">Tidak</span>
-                                                    @else   
-                                                    <span class="badge badge-light-success">Ya</span>
-                                                    @endif
-                                                </td>
-                                                <td class="text-center">
-                                                    @if($item->status == 0)
+                                                    @if($item->aktif == 0)
                                                     <span class="badge badge-light-danger">Nonaktif</span>
                                                     @else   
                                                     <span class="badge badge-light-success">Aktif</span>
@@ -105,12 +105,12 @@
                                                             data-toggle="tooltip" 
                                                             data-placement="top" 
                                                             title="View"
-                                                            data-foto="{{ asset('storage/'.$item->foto) }}"
+                                                            data-kode="{{ $item->kode }}"
                                                             data-nama="{{ $item->nama }}"
-                                                            data-tipe="{{ $item->tipe }}"
                                                             data-keterangan="{{ $item->keterangan }}"
-                                                            data-is_crafting="{{ $item->is_crafting }}"
-                                                            data-status="{{ $item->status }}"
+                                                            data-cp="{{ $item->cp }}"
+                                                            data-phone="{{ $item->phone }}"
+                                                            data-aktif="{{ $item->aktif }}"
                                                         >
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                                         </a>
@@ -120,16 +120,16 @@
                                                             data-placement="top" 
                                                             title="Edit"
                                                             data-id="{{ $item->id }}"
-                                                            data-foto="{{ asset('storage/'.$item->foto) }}"
+                                                            data-kode="{{ $item->kode }}"
                                                             data-nama="{{ $item->nama }}"
-                                                            data-tipe="{{ $item->tipe }}"
                                                             data-keterangan="{{ $item->keterangan }}"
-                                                            data-is_crafting="{{ $item->is_crafting }}"
-                                                            data-status="{{ $item->status }}"
+                                                            data-cp="{{ $item->cp }}"
+                                                            data-phone="{{ $item->phone }}"
+                                                            data-aktif="{{ $item->aktif }}"
                                                         >
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                                                         </a>
-                                                        <form action="{{ route('weapons.destroy', $item->id) }}" method="POST" style="display:inline;" class="form-delete-senjata">
+                                                        <form action="{{ route('badsides.destroy', $item->id) }}" method="POST" style="display:inline;" class="form-delete-kelompok">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="action-btn btn-delete bs-tooltip" data-toggle="tooltip" data-placement="top" title="Delete" style="border:none; background:none; padding:0;">
@@ -142,9 +142,6 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <div class="mt-3">
-                                        {{ $data->links() }}
-                                    </div>
                                 </div>
 
                             </div>
@@ -170,7 +167,7 @@
     </div>
     <!--  END CONTENT AREA  -->
     
-    <!-- Modal Add Senjata-->
+    <!-- Modal Add Kelompok-->
     <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="tambahModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -180,52 +177,38 @@
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
-                <form action="{{ route('weapons.store')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('badsides.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="form-group mb-3 text-center">
-                                    <img id="add-foto-preview" src="https://ui-avatars.com/api/?name=Foto" alt="Preview Foto" class="rounded-circle mb-2" width="120" height="120">
-                                </div>
                                 <div class="form-group mb-3">
-                                    <label for="foto">Foto</label>
-                                    <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>    
+                                    <label for="kode">Kode</label>
+                                    <input type="text" class="form-control" id="kode" name="kode" placeholder="Masukkan Kode" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="nama">Nama</label>
                                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama" required>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group mb-3">
-                                    <label>Tipe</label>
-                                    <select name="tipe" id="tipe" class="form-control" required>
-                                        <option value="Peluru">Peluru</option>
-                                        <option value="Pistol">Pistol</option>
-                                        <option value="Vest">Vest</option>
-                                        <option value="Barham">Barham</option>
-                                        <option value="Taktis">Taktis</option>
-                                        <option value="Blueprint">Blueprint</option>
-                                        <option value="Lain-lain">Lain-lain</option>
-                                    </select>
-                                </div>
                                 <div class="form-group mb-3">
                                     <label for="keterangan">Keterangan</label>
                                     <textarea class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Keterangan"></textarea>
                                 </div>
+                            </div>
+                            <div class="col-lg-6">
                                 <div class="form-group mb-3">
-                                    <label for="is_crafting">Crafting</label>
-                                    <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="is_crafting" name="is_crafting" checked>
-                                        <label class="form-check-label" for="is_crafting">Ya</label>
-                                    </div>
+                                    <label for="cp">Contact Person</label>
+                                    <input type="text" class="form-control" id="cp" name="cp" placeholder="Masukkan Contact Person">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="status">Status</label>
+                                    <label for="phone">Phone</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Masukkan HP Contact Person">    
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="aktif">Status</label>
                                     <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="status" name="status" checked required>
-                                        <label class="form-check-label" for="status">Aktif</label>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="aktif" name="aktif" checked required>
+                                        <label class="form-check-label" for="aktif">Aktif</label>
                                     </div>
                                 </div>
                             </div>
@@ -240,12 +223,12 @@
         </div>
     </div>
 
-    <!-- Modal View Senjata -->
+    <!-- Modal View Kelompok -->
     <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Senjata</h5>
+                    <h5 class="modal-title">Detail Kelompok</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
@@ -253,30 +236,31 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="form-group mb-3 text-center">
-                                <img id="view-foto" src="" alt="Foto" class="rounded-circle mb-2" width="120" height="120">
+                            <div class="form-group mb-3">
+                                <label>Kode</label>
+                                <input type="text" class="form-control" id="view-kode" readonly>
                             </div>
                             <div class="form-group mb-3">
                                 <label>Nama</label>
                                 <input type="text" class="form-control" id="view-nama" readonly>
                             </div>
                             <div class="form-group mb-3">
-                                <label>Tipe</label>
-                                <input type="text" class="form-control" id="view-tipe" readonly>
+                                <label>Keterangan</label>
+                                <textarea class="form-control" id="view-keterangan" readonly></textarea>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
-                                <label>Keterangan</label>
-                                <textarea class="form-control" id="view-keterangan" readonly></textarea>
+                                <label>CP</label>
+                                <input type="text" class="form-control" id="view-cp" readonly>
                             </div>
                             <div class="form-group mb-3">
-                                <label>Crafting</label>
-                                <input type="text" class="form-control" id="view-is_crafting" readonly>
+                                <label>Phone</label>
+                                <input type="text" class="form-control" id="view-phone" readonly>
                             </div>
                             <div class="form-group mb-3">
                                 <label>Status</label>
-                                <input type="text" class="form-control" id="view-status" readonly>
+                                <input type="text" class="form-control" id="view-aktif" readonly>
                             </div>
                         </div>
                     </div>
@@ -285,63 +269,49 @@
         </div>
     </div>
 
-    <!-- Modal Edit Senjata -->
+    <!-- Modal Edit Kelompok -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Data Senjata</h5>
+                    <h5 class="modal-title">Edit Data Kelompok</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
-                <form id="form-edit-senjata" method="POST" enctype="multipart/form-data">
+                <form id="form-edit-kelompok" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-6">
-                                <div class="form-group mb-3 text-center">
-                                    <img id="edit-foto-preview" src="" alt="Foto" class="rounded-circle mb-2" width="120" height="120">
-                                </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit-foto">Ganti Foto</label>
-                                    <input type="file" class="form-control" id="edit-foto" name="foto" accept="image/*">
+                                    <label for="edit-kode">Kode</label>
+                                    <input type="text" class="form-control" id="edit-kode" name="kode" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="edit-nama">Nama</label>
                                     <input type="text" class="form-control" id="edit-nama" name="nama" required>
                                 </div>
-                            </div>
-                            <div class="col-lg-6">
                                 <div class="form-group mb-3">
                                     <label for="edit-keterangan">Keterangan</label>
                                     <textarea class="form-control" id="edit-keterangan" name="keterangan"></textarea>
                                 </div>
+                            </div>
+                            <div class="col-lg-6">
                                 <div class="form-group mb-3">
-                                    <label>Tipe</label>
-                                    <select name="tipe" id="edit-tipe" class="form-control">
-                                        <option value="Peluru">Peluru</option>
-                                        <option value="Pistol">Pistol</option>
-                                        <option value="Vest">Vest</option>
-                                        <option value="Barham">Barham</option>
-                                        <option value="Taktis">Taktis</option>
-                                        <option value="Blueprint">Blueprint</option>
-                                        <option value="Lain-lain">Lain-lain</option>
-                                    </select>
-                                </div>
-                                 <div class="form-group mb-3">
-                                    <label for="edit-is_crafting">Crafting</label>
-                                    <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="edit-is_crafting" name="is_crafting">
-                                        <label class="form-check-label" for="edit-is_crafting">Ya</label>
-                                    </div>
+                                    <label for="edit-cp">CP</label>
+                                    <input type="text" class="form-control" id="edit-cp" name="cp">
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit-status">Status</label>
+                                    <label for="edit-phone">Phone</label>
+                                    <input type="text" class="form-control" id="edit-phone" name="phone">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="edit-aktif">Status</label>
                                     <div class="form-check form-switch form-check-inline">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="edit-status" name="status">
-                                        <label class="form-check-label" for="edit-status">Aktif</label>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="edit-aktif" name="aktif">
+                                        <label class="form-check-label" for="edit-aktif">Aktif</label>
                                     </div>
                                 </div>
                             </div>
@@ -367,7 +337,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.form-delete-senjata').forEach(function(form) {
+            document.querySelectorAll('.form-delete-kelompok').forEach(function(form) {
                 form.addEventListener('submit', function(e) {
                     if(!confirm('Yakin ingin menghapus data ini?')) {
                         e.preventDefault();
@@ -375,24 +345,14 @@
                 });
             });
 
-            document.getElementById('foto').addEventListener('change', function(e) {
-                if (e.target.files && e.target.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(ev) {
-                        document.getElementById('add-foto-preview').src = ev.target.result;
-                    }
-                    reader.readAsDataURL(e.target.files[0]);
-                }
-            });
-
             document.querySelectorAll('.btn-view').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    document.getElementById('view-foto').src = btn.getAttribute('data-foto');
+                    document.getElementById('view-kode').value = btn.getAttribute('data-kode');
                     document.getElementById('view-nama').value = btn.getAttribute('data-nama');
-                    document.getElementById('view-tipe').value = btn.getAttribute('data-tipe');
                     document.getElementById('view-keterangan').value = btn.getAttribute('data-keterangan');
-                    document.getElementById('view-is_crafting').value = btn.getAttribute('data-is_crafting') == '1' ? 'Ya' : 'Tidak';
-                    document.getElementById('view-status').value = btn.getAttribute('data-status') == '1' ? 'Aktif' : 'Nonaktif';
+                    document.getElementById('view-cp').value = btn.getAttribute('data-cp');
+                    document.getElementById('view-phone').value = btn.getAttribute('data-phone');
+                    document.getElementById('view-aktif').value = btn.getAttribute('data-aktif') == '1' ? 'Aktif' : 'Nonaktif';
                     var modal = new bootstrap.Modal(document.getElementById('viewModal'));
                     modal.show();
                 });
@@ -400,30 +360,20 @@
 
             document.querySelectorAll('.btn-edit').forEach(function(btn) {
                 btn.addEventListener('click', function() {
-                    document.getElementById('edit-foto-preview').src = btn.getAttribute('data-foto');
+                    document.getElementById('edit-kode').value = btn.getAttribute('data-kode');
                     document.getElementById('edit-nama').value = btn.getAttribute('data-nama');
-                    document.getElementById('edit-tipe').value = btn.getAttribute('data-tipe');
                     document.getElementById('edit-keterangan').value = btn.getAttribute('data-keterangan');
-                    document.getElementById('edit-is_crafting').checked = btn.getAttribute('data-is_crafting') == '1' ? true : false;
-                    document.getElementById('edit-status').checked = btn.getAttribute('data-status') == '1' ? true : false;
+                    document.getElementById('edit-cp').value = btn.getAttribute('data-cp');
+                    document.getElementById('edit-phone').value = btn.getAttribute('data-phone');
+                    document.getElementById('edit-aktif').checked = btn.getAttribute('data-aktif') == '1' ? true : false;
 
                     var id = btn.getAttribute('data-id');
-                    var form = document.getElementById('form-edit-senjata');
-                    form.action = "{{ route('weapons.update', ':id') }}".replace(':id', id);
+                    var form = document.getElementById('form-edit-kelompok');
+                    form.action = "{{ route('badsides.update', ':id') }}".replace(':id', id);
 
                     var modal = new bootstrap.Modal(document.getElementById('editModal'));
                     modal.show();
                 });
-            });
-
-             document.getElementById('edit-foto').addEventListener('change', function(e) {
-                if (e.target.files && e.target.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(ev) {
-                        document.getElementById('edit-foto-preview').src = ev.target.result;
-                    }
-                    reader.readAsDataURL(e.target.files[0]);
-                }
             });
         });
     </script>
