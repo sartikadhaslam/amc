@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\BadsidesController;
+use App\Http\Controllers\WeaponsController;
+use App\Http\Controllers\HargaBeliController;
+use App\Http\Controllers\HargaJualController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,6 +49,24 @@ Route::middleware('auth')->group(function () {
     Route::put('/badsides/{id}', [BadsidesController::class, 'update'])->name('badsides.update');
     Route::delete('/badsides/{id}', [BadsidesController::class, 'destroy'])->name('badsides.destroy');
  
+    //weapons
+    Route::get('/weapons', [WeaponsController::class, 'index'])->name('weapons.index');
+    Route::post('/weapons', [WeaponsController::class, 'store'])->name('weapons.store');
+    Route::put('/weapons/{id}', [WeaponsController::class, 'update'])->name('weapons.update');
+    Route::delete('/weapons/{id}', [WeaponsController::class, 'destroy'])->name('weapons.destroy');
+
+     //hargabeli
+    Route::get('/harga-beli', [HargaBeliController::class, 'index'])->name('harga-beli.index');
+    Route::post('/harga-beli', [HargaBeliController::class, 'store'])->name('harga-beli.store');
+    Route::put('/harga-beli/{id}', [HargaBeliController::class, 'update'])->name('harga-beli.update');
+    Route::delete('/harga-beli/{id}', [HargaBeliController::class, 'destroy'])->name('harga-beli.destroy');
+
+     //hargajual
+    Route::get('/harga-jual', [HargaJualController::class, 'index'])->name('harga-jual.index');
+    Route::post('/harga-jual', [HargaJualController::class, 'store'])->name('harga-jual.store');
+    Route::put('/harga-jual/{id}', [HargaJualController::class, 'update'])->name('harga-jual.update');
+    Route::delete('/harga-jual/{id}', [HargaJualController::class, 'destroy'])->name('harga-jual.destroy');
+
     Route::get('/materials', [MaterialsController::class, 'index'])->name('materials.index');
 
     Route::get('/weapons', [WeaponsController::class, 'index'])->name('weapons.index');

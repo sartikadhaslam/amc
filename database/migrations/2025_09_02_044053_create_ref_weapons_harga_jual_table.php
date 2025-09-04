@@ -8,17 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('ref_weapons', function (Blueprint $table) {
+        Schema::create('ref_weapons_harga_jual', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('tipe');
-            $table->boolean('is_crafting')->default(false);
+            $table->integer('id_weapon');
+            $table->integer('id_badside');
+            $table->decimal('harga_jual', 15, 2);
             $table->boolean('status')->default(true);
             $table->text('keterangan')->nullable();
-            $table->string('foto')->nullable();
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamps();
@@ -27,9 +28,11 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('ref_weapons');
+        Schema::dropIfExists('ref_weapons_harga_jual');
     }
 };
